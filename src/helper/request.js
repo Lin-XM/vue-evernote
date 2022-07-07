@@ -7,7 +7,7 @@ axios.defaults.withCredentials = true           // 接口即使存在跨域，�
 export default function request(url, type = 'GET', data = {}) {
     return new Promise((resolve, reject) => {
         let option = {
-            url,
+            url ,
             method: type,
             validateStatus(status) {
                 return (status >=200 && status < 300) || status === 400

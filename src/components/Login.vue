@@ -10,7 +10,7 @@
                         <transition name="slide">
                             <div v-bind:class="{show: isShowRegister}" class="register">
                                 <label>
-                                    <input  type="text" v-model="register.username" placeholder="用户名">
+                                    <input type="text" v-model="register.username" placeholder="用户名">
                                     <input type="password" v-model="register.password" @keyup.enter="onRegister"
                                            placeholder="密码">
                                 </label>
@@ -41,6 +41,14 @@
 </template>
 
 <script>
+    import request from "../helper/request";
+
+    console.log(request);
+    // request('/auth/login', 'POST', {username: 'hunger', password: '123456'}).then(data=>{
+    //     console.log(data)
+    //   })
+
+
     export default {
         data() {
             return {
@@ -84,6 +92,13 @@
                 this.register.isError = false
                 this.register.notice = ''
                 console.log(`start register..., username: ${this.register.username} , password: ${this.register.password}`)
+
+                request('/auth/register', 'POST', {
+                    username: this.register.username,
+                    password: this.register.password
+                }).then(data => {
+                    console.log(data)
+                })
             },
             onLogin() {
                 if (!/^[\w\u4e00-\u9fa5]{3,15}$/.test(this.login.username)) {
@@ -100,6 +115,13 @@
                 this.login.notice = ''
 
                 console.log(`start login..., username: ${this.login.username} , password: ${this.login.password}`)
+                request()
+                request('/auth/login', 'POST', {
+                    username: this.login.username,
+                    password: this.login.password
+                }).then(data => {
+                    console.log(data)
+                })
             }
         }
     }

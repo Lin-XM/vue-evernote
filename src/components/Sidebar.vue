@@ -7,16 +7,23 @@
             <router-link to="/trash/1" title="回收站"><img alt="" src="../assets/trash.svg" class="iconfont icon-trash"> </router-link>
         </div>
         <div class="logout" >
-            <img alt="" src="../assets/logout.svg" class="iconfont icon-logout">
+            <img alt="" src="../assets/logout.svg" class="iconfont icon-logout" @click="logout">
         </div>
     </div>
 </template>
 
 <script>
     import Avatar from "./Avatar";
+    import request from "../helper/request";
     export default {
         name: "Sidebar",
-        components: {Avatar}
+        components: {Avatar},
+        methods:{
+            logout(){
+                console.log('logout')
+                request('/auth/logout').then(data => { console.log(data)})
+            }
+        }
     }
 </script>
 

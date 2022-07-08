@@ -5,12 +5,21 @@
 </template>
 
 <script>
+    import Auth from "../apis/auth";
+
     export default {
         name: "NoteDetail",
         data() {
             return {
                 title: '笔记详情'
             }
+        },
+        created() {
+            Auth.getInfo().then(res => {
+                if (!res.isLogin) {
+                    this.$router.push({path: '/login'})
+                }
+            })
         }
     }
 </script>

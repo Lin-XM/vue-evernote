@@ -26,6 +26,8 @@
             logout() {
                 console.log('logout')
                 Auth.logout().then(data => {
+                    this.$router.push({path: '/login'})
+                    window.alert('注销成功~')
                     console.log(data)
                 })
             }

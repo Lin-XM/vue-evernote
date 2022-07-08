@@ -42,12 +42,9 @@
 
 <script>
     import Auth from '../apis/auth'
-
-    Auth.getInfo().then(data => {
-        console.log(data);
+    Auth.getInfo().then(res=>{
+        console.log(res);
     })
-
-
     export default {
         data() {
             return {
@@ -68,6 +65,7 @@
             }
         },
         methods: {
+
             showLogin() {
                 this.isShowLogin = true
                 this.isShowRegister = false
@@ -88,15 +86,24 @@
                     this.register.notice = '密码长度为6~16个字符'
                     return
                 }
-                this.register.isError = false
-                this.register.notice = ''
-                console.log(`start register..., username: ${this.register.username} , password: ${this.register.password}`)
+
 
                 Auth.register({
                     username: this.register.username,
                     password: this.register.password
-                }).then(data => {
+                }).then(data => {                   // 注册成功 ==>跳转页面
+                    this.register.isError = false
+                    this.register.notice = ''
                     console.log(data);
+                    this.$router.push({path: '/notebooks'})
+
+                    this.$bus.$emit('userInfo',{ username:this.login.username})
+
+                    console.log('注册成功');
+                }).catch(data => {                    // 注册失败
+                    this.register.isError = true
+                    this.register.notice = data.msg
+                    window.alert('用户已存在！！')
                 })
 
 
@@ -112,16 +119,24 @@
                     this.login.notice = '密码长度为6~16个字符'
                     return
                 }
-                this.login.isError = false
-                this.login.notice = ''
 
-                console.log(`start login..., username: ${this.login.username} , password: ${this.login.password}`)
 
                 Auth.login({
                     username: this.login.username,
                     password: this.login.password
-                }).then(data => {
+                }).then(data => {               // 登录成功 ==> 跳转页面
+                    this.login.isError = false
+                    this.login.notice = ''
                     console.log(data)
+                    console.log('start redirect...');
+                    this.$router.push({path: '/notebooks'})
+
+                    this.$bus.$emit('userInfo',{ username:this.login.username})
+                }).catch(data => {              // 登录失败
+                    window.alert('输入的用户名或密码错误！')
+                    console.log(data);
+                    this.login.isError = true
+                    this.login.notice = data.msg
                 })
             }
         }

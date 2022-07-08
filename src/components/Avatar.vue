@@ -1,16 +1,35 @@
 <template>
-    <span :title="user.username">{{slug}}</span>
+    <span :title="username">{{slug}}</span>
 </template>
 
 <script>
+    import Auth from '../apis/auth'
+
     export default {
         name: "Avatar",
         data(){
             return {
-                user:{
-                    username:"xiaoming"
-                },
-                slug:"H",
+                username:"未登录",
+            }
+        },
+        created(){
+            this.$bus.$on('userInfo', user =>{
+                console.log(user.username);
+                this.username = user.username
+            })
+            Auth.getInfo().then(res =>{
+                console.log(res);
+                if(res.isLogin){
+                    this.username = res.data.username
+                }
+            })
+        },
+        beforeDestroy() {
+            this.$bus.$off('userInfo')
+        },
+        computed:{
+            slug(){
+                return this.username.charAt(0)
             }
         }
     }

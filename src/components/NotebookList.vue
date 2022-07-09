@@ -1,21 +1,21 @@
 <template>
     <div class="detail" id="notebook-list">
-       <header>
-           <a href="#" class="btn" @click="onCreate">
-               <i class="iconfont icon-plus">新建笔记本</i>
-           </a>
-       </header>
+        <header>
+            <a href="#" class="btn" @click.prevent="onCreate">
+                <i class="iconfont icon-plus">新建笔记本</i>
+            </a>
+        </header>
         <main>
             <div class="layout">
                 <h3>笔记本列表{{notebooks.length}}</h3>
                 <div class="book-list">
-                    <router-link to="/note/1" v-for="notebook in notebooks" :key="notebook.id"  class="notebook">
+                    <router-link to="/note/1" v-for="notebook in notebooks" :key="notebook.id" class="notebook">
                         <div>
                             <span class="iconfont icon-notebook">{{notebook.title}}</span>
                             <span>{{notebook.noteCounts}}</span>
-                            <span class="action" @click="onEdit">编辑</span>
-                            <span class="action" @click="onDelete">删除</span>
-                            <span class="date">3天前</span>
+                            <span class="action" @click.stop.prevent="onEdit(notebook)">编辑</span>
+                            <span class="action" @click.stop.prevent="onDelete(notebook)">删除</span>
+                            <span class="date">{{notebook.friendDateCreatedAt}}</span>
                         </div>
                     </router-link>
                 </div>
@@ -25,46 +25,72 @@
 </template>
 
 <script>
-import Auth from "../apis/auth";
-import notebooksList from "../apis/notebooks";
+    import Auth from "../apis/auth";
+    import notebooksList from "../apis/notebooks";
+    import {friendDate} from '../helper/util.js'
 
 
-// 笔记本列表
+
+    // 笔记本列表
 
 
-export default {
-    name:'NotebookList',
-    data(){
-        return {
-            notebooks:[]
-        }
-    },
-    created() {
-        Auth.getInfo().then(res=>{
-            if(!res.isLogin){
-                this.$router.push({path:'/login'})
+    export default {
+        name: 'NotebookList',
+        data() {
+            return {
+                notebooks: []
             }
-            console.log(res.data);
-        })
-
-        notebooksList.getAll().then(res =>{
-            console.log(res.data);
-            this.notebooks = res.data
-        })
-
-    },
-    methods:{
-        onCreate(){
-            console.log('create');
         },
-        onEdit(){
-            console.log('Edit');
+        created() {
+            Auth.getInfo().then(res => {
+                if (!res.isLogin) {
+                    this.$router.push({path: '/login'})
+                }
+                console.log(res.data);
+            })
+
+            notebooksList.getAll().then(res => {
+                console.log(res.data);
+                this.notebooks = res.data
+            })
+
         },
-        onDelete(){
-            console.log('delete');
+        methods: {
+            onCreate() {
+                let title = window.prompt('创建笔记本~')
+                if (title.trim() === '') return window.alert('输入名称为空')
+
+
+                notebooksList.addNotebook({title}).then(res => {
+                    res.data.friendDateCreatedAt = friendDate(res.data.createdAt)
+                    this.notebooks.unshift(res.data)
+                })
+            },
+            onEdit(notebook) {
+                console.log('Edit', notebook);
+                let title = window.prompt('输入新的名称~', notebook.title)
+                if (title === '' &&  title.trim() === '') {
+                    return window.alert('输入名称为空')
+                }
+                notebooksList.updateNotebooks(notebook.id, {title}).then(res => {
+                    console.log(res);
+                    notebook.title = title
+                })
+
+            },
+            onDelete(notebook) {
+                console.log('delete', notebook);
+                let isConfirm = window.confirm('你确定要删除这个笔记吗？')
+                if (isConfirm) {
+                    notebooksList.deleteNotebook(notebook.id).then(res => {
+                        console.log(res);
+                        this.notebooks.splice(this.notebooks.indexOf(notebook), 1)
+                        alert(res.msg)
+                    })
+                }
+            }
         }
     }
-}
 </script>
 <style scoped lang="less">
     #notebook-list {
@@ -76,6 +102,7 @@ export default {
             cursor: pointer;
             margin-left: 10px;
         }
+
         .btn .iconfont {
             font-size: 12px;
         }
@@ -98,16 +125,17 @@ export default {
         main {
             padding: 30px 40px;
         }
+
         .layout {
             max-width: 966px;
             margin: 0 auto;
         }
 
 
-        main h3{
+        main h3 {
             font-size: 12px;
             color: black;
-            left:0;
+            left: 0;
             text-align: left;
         }
 
@@ -119,25 +147,30 @@ export default {
             border-radius: 4px;
             font-weight: bold;
         }
+
         main .book-list span {
             font-size: 12px;
             font-weight: bold;
             color: #b3c0c8;
         }
+
         main .date,
-        main .action{
+        main .action {
             float: right;
             margin-left: 10px;
         }
+
         main .iconfont {
             color: #1687ea;
             margin-right: 4px;
             left: 4px;
         }
+
         main .notebook {
             display: block;
             cursor: pointer;
         }
+
         main a.notebook:hover {
             background-color: #f7fafd;
         }

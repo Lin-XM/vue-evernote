@@ -21,7 +21,7 @@ const router = new VueRouter({
             component: Login
         },
         {
-            path:'/notebook',
+            path:'/notebooks',
             name:'NotebookList',
             component: NotebookList
         },

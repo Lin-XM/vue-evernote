@@ -28,9 +28,7 @@
     import Auth from "../apis/auth";
     import notebooksList from "../apis/notebooks";
     import {friendDate} from '../helper/util.js'
-
     // 笔记本列表
-
 
     export default {
         name: 'NotebookList',
@@ -51,8 +49,8 @@
                 console.log(res.data);
                 this.notebooks = res.data
             })
-
         },
+
         methods: {
             onCreate() {
                 this.$prompt('请输入新的笔记本标题', '创建笔记本', {
@@ -66,28 +64,12 @@
                 }).then(res => {
                     res.data.friendDateCreatedAt = friendDate(res.data.createdAt)
                     this.notebooks.unshift(res.data)
-                    this.$message({
-                        type: 'success',
-                        message: res.msg
-                    });
-                }).catch((res => {
-                    this.$message({
-                        type: "error",
-                        message: res.msg
-                    })
-                }))
+
+                    this.$message.success(res.msg)
+
+                })
             },
 
-
-            //     let title = window.prompt('创建笔记本~')
-            //     if (title.trim() === '') return window.alert('输入名称为空')
-            //
-            //
-            //     notebooksList.addNotebook({title}).then(res => {
-            //         res.data.friendDateCreatedAt = friendDate(res.data.createdAt)
-            //         this.notebooks.unshift(res.data)
-            //     })
-            // },
 
             onEdit(notebook) {
                 let title
@@ -95,26 +77,17 @@
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     inputPattern: /^.{1,30}$/,
-                    inputErrorMessage: '标题不能为空，且长度不能超过30字符'
+                    inputErrorMessage: '标题不能为空，且长度不能超过30字符',
+                    inputValue: notebook.title,
                 }).then(({value}) => {
                     title = value
                     return notebooksList.updateNotebooks(notebook.id, {title})
                 }).then(res => {
                     notebook.title = title
-                    this.$message({
-                        type: 'success',
-                        message: res.msg
-                    });
+
+                    this.$message.success(res.msg)
+
                 })
-
-
-                // let title = window.prompt('输入新的名称~', notebook.title)
-                // if (title === '' && title.trim() === '') {
-                //     return window.alert('输入名称为空')
-                // }
-                // notebooksList.updateNotebooks(notebook.id, {title}).then(res => {
-                //     notebook.title = title
-                // })
 
             },
             onDelete(notebook) {
@@ -123,32 +96,12 @@
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-
-
                     return notebooksList.deleteNotebook(notebook.id)
                 }).then(res => {
                     this.notebooks.splice(this.notebooks.indexOf(notebook), 1)
-                    this.$message({
-                        type: 'success',
-                        message:res.msg
-                    })
-                }).catch(()=>{
-                    this.$message({
-                        type: 'info',
-                        message:'取消删除成功'
-                    })
-                });
 
-
-
-                //
-                // let isConfirm = window.confirm('你确定要删除这个笔记吗？')
-                // if (isConfirm) {
-                //     notebooksList.deleteNotebook(notebook.id).then(res => {
-                //         this.notebooks.splice(this.notebooks.indexOf(notebook), 1)
-                //         alert(res.msg)
-                //     })
-                // }
+                    this.$message.success(res.msg)
+                })
             }
         }
     }

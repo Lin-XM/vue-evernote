@@ -14,11 +14,9 @@
         },
         created(){
             this.$bus.$on('userInfo', user =>{
-                console.log(user.username);
                 this.username = user.username
             })
             Auth.getInfo().then(res =>{
-                console.log(res);
                 if(res.isLogin){
                     this.username = res.data.username
                 }

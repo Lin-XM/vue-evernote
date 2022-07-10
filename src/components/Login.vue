@@ -42,9 +42,7 @@
 
 <script>
     import Auth from '../apis/auth'
-    Auth.getInfo().then(res=>{
-        console.log(res);
-    })
+
     export default {
         data() {
             return {

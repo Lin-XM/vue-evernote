@@ -2,9 +2,9 @@
     <div class="note-sidebar">
         <span class="btn add-note">添加笔记</span>
         <el-dropdown class="notebook-title" @command="handleCommand" placement="bottom">
-      <span class="el-dropdown-link">
-        我的笔记本1 <i class="iconfont icon-down"></i>
-      </span>
+              <span class="el-dropdown-link">
+                {{curBook.title}} <i class="iconfont icon-down"></i>
+              </span>
             <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item v-for="notebook in notebooks" :key="notebook.id" :command="notebook.id">
                     {{notebook.title}}
@@ -39,27 +39,22 @@
         data() {
             return {
                 notebooks: [],
-                notes: [
-                    {
-                        id: 11,
-                        title: "笔记1",
-                        updatedAtFriendly: '刚刚'
-                    },
-                    {
-                        id: 12,
-                        title: "笔记2",
-                        updatedAtFriendly: '刚刚'
-                    }
-                ],
-                curBook: {}
+                notes: [],
+                curBook: {} // 展示第一个笔记本里面的内容
             }
         },
         created() {
             Notebooks.getAll().then(res => {
                 // TODO
                 // 这个笔记本数量比较多，需要进行处理
+                // 将悬浮展示列表，改为点击展示笔记本列表
 
                 this.notebooks = res.data
+                this.curBook = this.notebooks.find(notebook => notebook.id === this.$route.query.notebookId)
+                    || this.notebooks[0] || {}
+                return Notes.getAllNotes({ notebookId: this.curBook.id })
+            }).then(res => {
+                this.notes = res.data
             })
         },
         methods: {
@@ -115,6 +110,7 @@
 
         .el-dropdown-link {
             cursor: pointer;
+            overflow: hidden;
         }
 
         .el-dropdown-menu__item {

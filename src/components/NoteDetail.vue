@@ -1,7 +1,26 @@
 <template>
-    <div id="note-detail" class="note-detail">
+    <div id="note" class="detail">
         <note-side-bar />
-        <h2>{{title}}:{{$route.params.noteId}}</h2>
+        <div class="note-detail">
+            <div class="note-bar">
+                <span>创建日期：{{curNote.createdAtFriendly}}</span>
+                <span>更新日期：{{curNote.updatedAtFriendly}}</span>
+                <span>{{curNote.statusText}}</span>
+            </div>
+            <div class="note-title">
+                <label>
+                    <input type="text" :value="curNote.title" placeholder="输入标题">
+                </label>
+            </div>
+            <div class="editor">
+
+                <label>
+                    <textarea v-show="true" :value="curNote.content" placeholder="输入内容，支持 Markdown 语法" ></textarea>
+                </label>
+                <div class="preview markdown-body"  v-show="true">预览页面</div>
+
+            </div>
+        </div>
     </div>
 </template>
 
@@ -13,7 +32,13 @@
         components: {NoteSideBar},
         data() {
             return {
-                title: '笔记详情'
+                curNote:{
+                    title: '笔记详情',
+                    content:'我的笔记内容',
+                    createdAtFriendly:'一天前',
+                    updatedAtFriendly:'刚刚',
+                    statusText:'未更新'
+                }
             }
         },
         created() {
@@ -27,12 +52,17 @@
 </script>
 
 <style scoped lang="less">
-
+    #note {
+        display: flex;
+        align-items: stretch;
+        background-color: #fff;
+        flex: 1;
+    }
     .note-detail {
         flex: 1;
         display: flex;
-        flex-direction: row;
-
+        flex-direction: column;
+        justify-content: flex-start;
         .note-detail-ct {
             height: 100%;
         }
@@ -83,7 +113,7 @@
         }
         textarea, .preview {
             position: absolute;
-            width: 100%;
+            width: 50%;
             height: 100%;
             padding: 20px;
         }

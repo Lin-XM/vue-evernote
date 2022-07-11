@@ -9,7 +9,7 @@
             <div class="layout">
                 <h3>笔记本列表{{notebooks.length}}</h3>
                 <div class="book-list">
-                    <router-link to="/note/1" v-for="notebook in notebooks" :key="notebook.id" class="notebook">
+                    <router-link :to="`/note?notebookId=${notebook.id}`" v-for="notebook in notebooks" :key="notebook.id" class="notebook">
                         <div>
                             <span class="iconfont icon-notebook">{{notebook.title}}</span>
                             <span>{{notebook.noteCounts}}</span>
@@ -26,7 +26,7 @@
 
 <script>
     import Auth from "../apis/auth";
-    import notebooksList from "../apis/notebooks";
+    import NotebooksList from "../apis/notebooks";
     import {friendDate} from '../helper/util.js'
     // 笔记本列表
 
@@ -45,7 +45,7 @@
                 console.log(res.data);
             })
 
-            notebooksList.getAll().then(res => {
+            NotebooksList.getAll().then(res => {
                 console.log(res.data);
                 this.notebooks = res.data
             })
@@ -59,7 +59,7 @@
                     inputPattern: /^.{1,30}$/,
                     inputErrorMessage: '标题不能为空，且长度不能超过30字符'
                 }).then(({value}) => {
-                    return notebooksList.addNotebook({title: value})
+                    return NotebooksList.addNotebook({title: value})
 
                 }).then(res => {
                     res.data.friendDateCreatedAt = friendDate(res.data.createdAt)
@@ -81,7 +81,7 @@
                     inputValue: notebook.title,
                 }).then(({value}) => {
                     title = value
-                    return notebooksList.updateNotebooks(notebook.id, {title})
+                    return NotebooksList.updateNotebooks(notebook.id, {title})
                 }).then(res => {
                     notebook.title = title
 
@@ -96,7 +96,7 @@
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    return notebooksList.deleteNotebook(notebook.id)
+                    return NotebooksList.deleteNotebook(notebook.id)
                 }).then(res => {
                     this.notebooks.splice(this.notebooks.indexOf(notebook), 1)
 

@@ -2,11 +2,11 @@
     <div class="sidebar">
         <div class="icons">
             <avatar></avatar>
-            <router-link to="/note/1" title="笔记"><img alt="" src="../assets/notebook.svg" class="iconfont icon-note">
+            <router-link to="/note" title="笔记"><img alt="" src="../assets/notebook.svg" class="iconfont icon-note">
             </router-link>
             <router-link to="/notebooks" title="笔记本"><img alt='' src="../assets/note.svg"
                                                           class="iconfont icon-notebook"></router-link>
-            <router-link to="/trash/1" title="回收站"><img alt="" src="../assets/trash.svg" class="iconfont icon-trash">
+            <router-link to="/trash" title="回收站"><img alt="" src="../assets/trash.svg" class="iconfont icon-trash">
             </router-link>
         </div>
         <div class="logout">

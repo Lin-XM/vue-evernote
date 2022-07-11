@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h2>{{title}}:{{$route.params.noteId}}</h2>
+        <h2>{{title}}:{{$route.query.noteId}}</h2>
     </div>
 </template>
 

@@ -26,8 +26,8 @@ export default function request(url, type = 'GET', data = {}) {
                 Message.error(res.data.msg)
                 reject(res.data)
             }
-        }).catch((res) => {
-            Message.error(res.data.msg)
+        }).catch(() => {
+            Message.error('网络异常')
 
             reject({msg: '网络异常！'})
         })

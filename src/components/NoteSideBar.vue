@@ -1,6 +1,6 @@
 <template>
     <div class="note-sidebar">
-        <span class="btn add-note">添加笔记</span>
+        <span class="btn add-note" @click="addNote">添加笔记</span>
         <el-dropdown class="notebook-title" @command="handleCommand" placement="bottom">
               <span class="el-dropdown-link">
                 {{curBook.title}} <i class="iconfont icon-down"></i>
@@ -35,7 +35,7 @@
 
     export default {
         name: 'NoteSideBar',
-        props:['curNote'],
+        props: ['curNote'],
         data() {
             return {
                 notebooks: [],
@@ -52,27 +52,35 @@
                 this.notebooks = res.data
                 this.curBook = this.notebooks.find(notebook => notebook.id === this.$route.query.notebookId)
                     || this.notebooks[0] || {}
-                return Notes.getAllNotes({ notebookId: this.curBook.id })
+                return Notes.getAllNotes({notebookId: this.curBook.id})
             }).then(res => {
                 this.notes = res.data
 
+                this.$bus.$emit('update:updateNotes', this.notes)
                 // 传递 notes 数据给 NoteDetail
-                this.$emit('update:updateNotes',this.notes)
+                this.$emit('update:updateNotes', this.notes)
             })
         },
         methods: {
 
             handleCommand(notebookId) {
-                if(notebookId === 'trash') {
-                    return this.$router.push({ path: '/trash'})
+                if (notebookId === 'trash') {
+                    return this.$router.push({path: '/trash'})
                 }
                 this.curBook = this.notebooks.find(notebook => notebook.id === notebookId)
-                Notes.getAllNotes({ notebookId })
+                Notes.getAllNotes({notebookId})
                     .then(res => {
                         this.notes = res.data
                         this.$emit('update:updateNotes', this.notes)
+                        this.$bus.$emit('update:updateNotes', this.notes)
                     })
             },
+            addNote() {
+                Notes.addNote({notebookId: this.curBook.id})
+                    .then(res => {
+                        this.notes.unshift(res.data)
+                    })
+            }
 
         }
     }
@@ -116,7 +124,7 @@
             overflow: hidden;
         }
 
-        .el-dropdown-menu__item {
+        .el-dropdown-menu-item {
             width: 200px;
         }
 
@@ -152,6 +160,8 @@
                     padding: 3px 0;
                     font-size: 12px;
                     border: 2px solid transparent;
+                    /*min-height: 26px;*/
+
                 }
 
                 .router-link-exact-active {

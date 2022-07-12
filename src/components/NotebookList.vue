@@ -8,7 +8,7 @@
         </header>
         <main>
             <div class="layout">
-                <h3>笔记本列表{{notebooks.length}}</h3>
+                <h3>笔记本列表, 共{{notebooks.length}}</h3>
                 <div class="book-list">
                     <router-link :to="`/note?notebookId=${notebook.id}`" v-for="notebook in notebooks"
                                  :key="notebook.id" class="notebook">

@@ -2,14 +2,16 @@
     <div class="detail" id="notebook-list">
         <header>
             <a href="#" class="btn" @click.prevent="onCreate">
-                <i class="iconfont icon-plus">新建笔记本</i>
+                <img alt="" src="../assets/add.svg" class="iconfont icon-plus"/>
+                <span class="iconText">新建笔记本</span>
             </a>
         </header>
         <main>
             <div class="layout">
                 <h3>笔记本列表{{notebooks.length}}</h3>
                 <div class="book-list">
-                    <router-link :to="`/note?notebookId=${notebook.id}`" v-for="notebook in notebooks" :key="notebook.id" class="notebook">
+                    <router-link :to="`/note?notebookId=${notebook.id}`" v-for="notebook in notebooks"
+                                 :key="notebook.id" class="notebook">
                         <div>
                             <span class="iconfont icon-notebook">{{notebook.title}}</span>
                             <span>{{notebook.noteCounts}}</span>
@@ -27,7 +29,7 @@
 <script>
     import Auth from "../apis/auth";
     import NotebooksList from "../apis/notebooks";
-    import {friendDate} from '../helper/util.js'
+    import {friendlyDate} from '../helper/util.js'
     // 笔记本列表
 
     export default {
@@ -62,7 +64,7 @@
                     return NotebooksList.addNotebook({title: value})
 
                 }).then(res => {
-                    res.data.friendDateCreatedAt = friendDate(res.data.createdAt)
+                    res.data.friendDateCreatedAt = friendlyDate(res.data.createdAt)
                     this.notebooks.unshift(res.data)
 
                     this.$message.success(res.msg)
@@ -110,16 +112,32 @@
     #notebook-list {
         flex: 1;
 
-        .btn {
-            font-size: 12px;
-            color: #666;
-            cursor: pointer;
-            margin-left: 10px;
+        header {
+            border-bottom: 2px solid #999;
+            padding: 12px 0 ;
+            margin:  0 4px;
+            min-width: 100%;
+            display: flex;
+            > .btn{
+                justify-content: flex-start;
+                margin: 4px 16px;
+
+                left: 12px;
+                > .iconfont {
+                    width: 1em;
+                    height: 1em;
+                    vertical-align: -0.15em;
+                    fill: currentColor;
+                    overflow: hidden;
+                }
+
+                > .iconText {
+                    font-size: 12px;
+                    padding: 2px 2px;
+                }
+            }
         }
 
-        .btn .iconfont {
-            font-size: 12px;
-        }
 
         input {
             width: 300px;
@@ -131,10 +149,6 @@
             outline: none;
         }
 
-        header {
-            padding: 12px;
-            border-bottom: 1px solid #ccc;
-        }
 
         main {
             padding: 30px 40px;
@@ -178,6 +192,7 @@
             color: #1687ea;
             margin-right: 4px;
             left: 4px;
+
         }
 
         main .notebook {

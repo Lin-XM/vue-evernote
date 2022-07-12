@@ -1,7 +1,7 @@
 // 获得某个笔记本里面的 笔记的内容个数
 
 import request from "../helper/request";
-import {friendDate} from '../helper/util.js'
+import {friendlyDate} from '../helper/util.js'
 
 
 const URL = {
@@ -16,8 +16,8 @@ export default {
         return new Promise((resolve, reject) => {
             request(URL.GET.replace(':notebookId', notebookId)).then(res => {
                 res.data = res.data.map(note => {
-                    note.createdAtFriendly = friendDate(note.createdAt)
-                    note.updatedAtFriendly = friendDate(note.updatedAt)
+                    note.createdAtFriendly = friendlyDate(note.createdAt)
+                    note.updatedAtFriendly = friendlyDate(note.updatedAt)
                     return note
                 }).sort((note1 , note2) =>{
                     return note1.updatedAt < note2.updatedAt

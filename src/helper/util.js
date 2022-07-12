@@ -1,4 +1,4 @@
-export function friendDate(dateStr) {
+export function friendlyDate(dateStr) {
     let dataObj = typeof dateStr === 'object' ? dateStr : new Date(dateStr)
     let time = dataObj.getTime()
     let now = Date.now()

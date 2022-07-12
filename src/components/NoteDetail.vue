@@ -1,6 +1,8 @@
 <template>
     <div id="note" class="detail">
-        <note-side-bar />
+
+        <note-side-bar :curNote = 'curNote' @update:updateNotes="value => notes = value" />
+
         <div class="note-detail">
             <div class="note-bar">
                 <span>创建日期：{{curNote.createdAtFriendly}}</span>
@@ -9,15 +11,14 @@
             </div>
             <div class="note-title">
                 <label>
-                    <input type="text" :value="curNote.title" placeholder="输入标题">
+                    <input type="text" v-model="curNote.title" placeholder="输入标题">
                 </label>
             </div>
             <div class="editor">
-
                 <label>
                     <textarea v-show="true" :value="curNote.content" placeholder="输入内容，支持 Markdown 语法" ></textarea>
                 </label>
-                <div class="preview markdown-body"  v-show="true">预览页面</div>
+<!--                <div class="preview markdown-body"  v-show="false">预览页面</div>-->
 
             </div>
         </div>
@@ -32,13 +33,8 @@
         components: {NoteSideBar},
         data() {
             return {
-                curNote:{
-                    title: '笔记详情',
-                    content:'我的笔记内容',
-                    createdAtFriendly:'一天前',
-                    updatedAtFriendly:'刚刚',
-                    statusText:'未更新'
-                }
+                curNote:{},
+                notes:[]
             }
         },
         created() {
@@ -47,6 +43,11 @@
                     this.$router.push({path: '/login'})
                 }
             })
+        },
+        beforeRouteUpdate(to){
+            console.log( typeof to.query.noteId);
+            console.log(this.notes);
+            this.curNote = this.notes.find(note => note.id.toString() === to.query.noteId)
         }
     }
 </script>

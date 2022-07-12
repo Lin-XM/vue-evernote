@@ -12,6 +12,8 @@
                 <el-dropdown-item command="trash">回收站</el-dropdown-item>
             </el-dropdown-menu>
         </el-dropdown>
+
+
         <div class="menu">
             <div>更新时间</div>
             <div>标题</div>
@@ -31,11 +33,9 @@
     import Notebooks from "../apis/notebooks";
     import Notes from '../apis/notes'
 
-    window.Notes = Notes
-
     export default {
         name: 'NoteSideBar',
-
+        props:['curNote'],
         data() {
             return {
                 notebooks: [],
@@ -55,19 +55,22 @@
                 return Notes.getAllNotes({ notebookId: this.curBook.id })
             }).then(res => {
                 this.notes = res.data
+
+                // 传递 notes 数据给 NoteDetail
+                this.$emit('update:updateNotes',this.notes)
             })
         },
         methods: {
 
             handleCommand(notebookId) {
-                if (notebookId === 'trash') {
-                    return this.$router.push({path: '/trash'})
+                if(notebookId === 'trash') {
+                    return this.$router.push({ path: '/trash'})
                 }
                 this.curBook = this.notebooks.find(notebook => notebook.id === notebookId)
-                Notes.getAllNotes({notebookId})
+                Notes.getAllNotes({ notebookId })
                     .then(res => {
                         this.notes = res.data
-                        this.$emit('update:notes', this.notes)
+                        this.$emit('update:updateNotes', this.notes)
                     })
             },
 

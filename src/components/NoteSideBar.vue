@@ -20,7 +20,7 @@
         </div>
         <ul class="notes">
             <li v-for="note in notes" :key="note.id">
-                <router-link :to="`/note?noteId=${note.id}&notebookId=${curBook.id}`">
+                <router-link  :to="`/note?noteId=${note.id}&notebookId=${curBook.id}`">
                     <span class="date">{{note.updatedAtFriendly}}</span>
                     <span class="title">{{note.title}}</span>
                 </router-link>
@@ -40,7 +40,7 @@
             return {
                 notebooks: [],
                 notes: [],
-                curBook: {} // 展示第一个笔记本里面的内容
+                curBook: {}, // 展示第一个笔记本里面的内容
             }
         },
         created() {
@@ -80,7 +80,8 @@
                     .then(res => {
                         this.notes.unshift(res.data)
                     })
-            }
+            },
+
 
         }
     }
@@ -154,7 +155,9 @@
                 &:nth-child(odd) {
                     background-color: #f2f2f2;
                 }
-
+                .active{
+                    background-color: skyblue;
+                }
                 a {
                     display: flex;
                     padding: 3px 0;
@@ -164,9 +167,15 @@
 
                 }
 
-                .router-link-exact-active {
+                a.router-link-exact-active {
                     border: 2px solid #81c0f3;
                     border-radius: 3px;
+                    background-color: orange;
+                }
+                .router-link-active {
+                    border: 2px solid #81c0f3;
+                    border-radius: 3px;
+                    background-color: orange;
                 }
 
                 span {

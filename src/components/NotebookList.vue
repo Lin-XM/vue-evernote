@@ -30,25 +30,22 @@
     import Auth from "../apis/auth";
     import NotebooksList from "../apis/notebooks";
     import {friendlyDate} from '../helper/util.js'
+    import { mapState,mapActions,mapGetters} from 'vuex'
     // 笔记本列表
 
     export default {
         name: 'NotebookList',
         data() {
-            return {
-                notebooks: []
-            }
+            return {}
         },
         created() {
             Auth.getInfo().then(res => {
                 if (!res.isLogin) {
                     this.$router.push({path: '/login'})
                 }
-                console.log(res.data);
             })
 
             NotebooksList.getAll().then(res => {
-                console.log(res.data);
                 this.notebooks = res.data
             })
         },

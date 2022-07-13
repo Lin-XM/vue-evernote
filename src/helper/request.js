@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios from "axios";
 import {Message} from "element-ui";
 
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'

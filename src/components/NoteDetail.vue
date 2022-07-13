@@ -171,11 +171,14 @@
         .editor {
             height: ~"calc(100% - 70px)";
             position: relative;
+            & ::-webkit-scrollbar{
+                display: none;
+            }
         }
 
         textarea, .preview {
             position: absolute;
-            width: 50%;
+            width: 100%;
             min-height: 90vh;
             padding: 20px;
         }
@@ -191,6 +194,9 @@
 
         code {
             color: #f66;
+        }
+        .markdown-body{
+            text-align: start;
         }
     }
 </style>

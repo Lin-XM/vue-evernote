@@ -28,9 +28,9 @@
 
 <script>
     import Auth from "../apis/auth";
-    import NotebooksList from "../apis/notebooks";
-    import {friendlyDate} from '../helper/util.js'
-    import { mapState,mapActions,mapGetters} from 'vuex'
+    // import NotebooksList from "../apis/notebooks";
+    // import {friendlyDate} from '../helper/util.js'
+    import {mapGetters, mapActions} from 'vuex'
     // 笔记本列表
 
     export default {
@@ -45,12 +45,24 @@
                 }
             })
 
-            NotebooksList.getAll().then(res => {
-                this.notebooks = res.data
-            })
+            // NotebooksList.getAll().then(res => {
+            //     this.notebooks = res.data
+            // })
+            this.$store.dispatch('getNotebooks')
+        },
+        computed: {
+            ...mapGetters(['notebooks'])
         },
 
         methods: {
+
+            ...mapActions([
+                'getNotebooks',
+                'addNotebook',
+                'updateNotebook',
+                'deleteNotebook'
+            ]),
+
             onCreate() {
                 this.$prompt('请输入新的笔记本标题', '创建笔记本', {
                     confirmButtonText: '确定',
@@ -58,20 +70,20 @@
                     inputPattern: /^.{1,30}$/,
                     inputErrorMessage: '标题不能为空，且长度不能超过30字符'
                 }).then(({value}) => {
-                    return NotebooksList.addNotebook({title: value})
-
-                }).then(res => {
-                    res.data.friendDateCreatedAt = friendlyDate(res.data.createdAt)
-                    this.notebooks.unshift(res.data)
-
-                    this.$message.success(res.msg)
+                    this.addNotebook({title: value})
+                    // return NotebooksList.addNotebook({title: value})
 
                 })
+                //     .then(res => {
+                //     res.data.friendDateCreatedAt = friendlyDate(res.data.createdAt)
+                //     this.notebooks.unshift(res.data)
+                //
+                //     this.$message.success(res.msg)
+                // })
             },
 
 
             onEdit(notebook) {
-                let title
                 this.$prompt('请输入新的笔记本标题', '修改笔记本', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
@@ -79,14 +91,13 @@
                     inputErrorMessage: '标题不能为空，且长度不能超过30字符',
                     inputValue: notebook.title,
                 }).then(({value}) => {
-                    title = value
-                    return NotebooksList.updateNotebooks(notebook.id, {title})
-                }).then(res => {
-                    notebook.title = title
-
-                    this.$message.success(res.msg)
-
+                    this.updateNotebook({notebookId: notebook.id, title: value})
+                    // return NotebooksList.updateNotebooks(notebook.id, {title})
                 })
+                //     .then(res => {
+                //     notebook.title = title
+                //     this.$message.success(res.msg)
+                // })
 
             },
             onDelete(notebook) {
@@ -95,12 +106,14 @@
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    return NotebooksList.deleteNotebook(notebook.id)
-                }).then(res => {
-                    this.notebooks.splice(this.notebooks.indexOf(notebook), 1)
-
-                    this.$message.success(res.msg)
+                    this.deleteNotebook({notebookId: notebook.id})
+                    // return NotebooksList.deleteNotebook(notebook.id)
                 })
+                //     .then(res => {
+                //     this.notebooks.splice(this.notebooks.indexOf(notebook), 1)
+                //
+                //     this.$message.success(res.msg)
+                // })
             }
         }
     }
@@ -111,15 +124,17 @@
 
         header {
             border-bottom: 2px solid #999;
-            padding: 12px 0 ;
-            margin:  0 4px;
+            padding: 12px 0;
+            margin: 0 4px;
             min-width: 100%;
             display: flex;
-            > .btn{
+
+            > .btn {
                 justify-content: flex-start;
                 margin: 4px 16px;
 
                 left: 12px;
+
                 > .iconfont {
                     width: 1em;
                     height: 1em;

@@ -1,6 +1,6 @@
 <template>
     <div class="note-sidebar">
-        <span class="btn add-note" @click="addNote">添加笔记</span>
+        <span class="btn add-note" @click="onAddNote">添加笔记</span>
         <el-dropdown class="notebook-title" @command="handleCommand" placement="bottom">
               <span class="el-dropdown-link">
                 {{curBook.title}} <i class="iconfont icon-down"></i>
@@ -30,56 +30,79 @@
 </template>
 
 <script>
-    import Notebooks from "../apis/notebooks";
-    import Notes from '../apis/notes'
+    // import Notebooks from "../apis/notebooks";
+    // import Notes from '../apis/notes'
+    import {mapActions,mapGetters} from "vuex"
+
+    // 不能查看笔记
+
 
     export default {
         name: 'NoteSideBar',
         props: ['curNote'],
         data() {
             return {
-                notebooks: [],
-                notes: [],
-                curBook: {}, // 展示第一个笔记本里面的内容
             }
         },
         created() {
-            Notebooks.getAll().then(res => {
-                // TODO
-                // 这个笔记本数量比较多，需要进行处理
-                // 将悬浮展示列表，改为点击展示笔记本列表
-
-                this.notebooks = res.data
-                this.curBook = this.notebooks.find(notebook => notebook.id === this.$route.query.notebookId)
-                    || this.notebooks[0] || {}
-                return Notes.getAllNotes({notebookId: this.curBook.id})
-            }).then(res => {
-                this.notes = res.data
-
-                this.$bus.$emit('update:updateNotes', this.notes)
-                // 传递 notes 数据给 NoteDetail
-                this.$emit('update:updateNotes', this.notes)
+            this.getNotebooks().then(()=>{
+                this.$store.commit('setCurBook',{curBookId:this.$route.query.notebookId})
+                this.getNotes({notebookId:this.curBook.id})
             })
+
+            // Notebooks.getAll().then(res => {
+            //     // TODO
+            //     // 这个笔记本数量比较多，需要进行处理
+            //     // 将悬浮展示列表，改为点击展示笔记本列表
+            //
+            //     this.notebooks = res.data
+            //     this.curBook = this.notebooks.find(notebook => notebook.id === this.$route.query.notebookId)
+            //         || this.notebooks[0] || {}
+            //     return Notes.getAllNotes({notebookId: this.curBook.id})
+            // }).then(res => {
+            //     this.notes = res.data
+            //
+            //     this.$bus.$emit('update:updateNotes', this.notes)
+            //     // 传递 notes 数据给 NoteDetail
+            //     this.$emit('update:updateNotes', this.notes)
+            // })
+        },
+        computed:{
+            ...mapGetters([
+                'notebooks',
+                'notes',
+                'curBook'
+            ])
         },
         methods: {
-
+            // ...mapMutations([
+            //     'setCurBook',
+            // ]),
+            ...mapActions([
+                'getNotebooks',
+                'getNotes',
+                'addNote'
+            ]),
             handleCommand(notebookId) {
                 if (notebookId === 'trash') {
                     return this.$router.push({path: '/trash'})
                 }
-                this.curBook = this.notebooks.find(notebook => notebook.id === notebookId)
-                Notes.getAllNotes({notebookId})
-                    .then(res => {
-                        this.notes = res.data
-                        this.$emit('update:updateNotes', this.notes)
-                        this.$bus.$emit('update:updateNotes', this.notes)
-                    })
+                this.$store.commit('setCurBook',{curBookId:notebookId})
+                this.getNotes({notebookId})
+
+                // this.curBook = this.notebooks.find(notebook => notebook.id === notebookId)
+                // Notes.getAllNotes({notebookId})
+                //     .then(res => {
+                //         this.notes = res.data
+                //         this.$emit('update:updateNotes', this.notes)
+                //         this.$bus.$emit('update:updateNotes', this.notes)
+                //     })
             },
-            addNote() {
-                Notes.addNote({notebookId: this.curBook.id})
-                    .then(res => {
-                        this.notes.unshift(res.data)
-                    })
+            onAddNote() {
+                this.addNote({notebookId: this.curBook.id})
+                    // .then(res => {
+                    //     this.notes.unshift(res.data)
+                    // })
             },
 
 

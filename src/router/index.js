@@ -5,7 +5,6 @@ import Login from '../components/Login.vue'
 import NotebookList from "../components/NotebookList";
 import NoteDetail from "../components/NoteDetail";
 import TrashDetail from "../components/TrashDetail";
-// import NoFound from '../components/NoFound'
 
 Vue.use(VueRouter)
 const router = new VueRouter({

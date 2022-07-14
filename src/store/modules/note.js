@@ -5,18 +5,28 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex)
 const state = {
-    notes: [],
-    curNote: {}
+    notes: null,
+    curNoteId: null
 }
 const getters = {
-    notes: state => state.notes
+    notes: state => state.notes,
+    curNote: state => {
+        if (!Array.isArray(state.notes)) return {}
+        if (!state.curNoteId) return state.notes[0] || {}
+        return state.notes.find(note => note.id.toString() === state.curNoteId) || {}
+    }
 }
+
 const mutations = {
+    setCurNote(state, payload) {
+        state.curNoteId = payload.curNoteId
+    },
+
     setNotes(state, payload) {
         state.notes = payload.notes
     },
     addNote(state, payload) {
-        state.notes.unshift(payload.notes)
+        state.notes.unshift(payload.note)
     },
     updateNote(state, payload) {
         let note = state.notes.find(note => note.id === payload.noteId) || {}
@@ -34,20 +44,19 @@ const actions = {
         })
     },
     addNote({commit}, {notebookId, title, content}) {
-        Notes.addNote({notebookId}, {title, content}).then(res => {
+         return Notes.addNote({notebookId}, {title, content}).then(res => {
             commit('addNote', {note: res.data})
             Message.success(res.msg)
         })
     },
     updateNote({commit}, {noteId, title, content}) {
-        Notes.updateNote({noteId}, {title, content}).then((res) => {
+        return Notes.updateNote({noteId}, {title, content}).then(() => {
 
             commit('updateNote', {noteId, title, content})
-            Message.success(res.msg)
         })
     },
     deleteNote({commit}, {noteId}) {
-        Notes.deleteNote({noteId}).then((res) => {
+        return Notes.deleteNote({noteId}).then((res) => {
             commit('deleteNote', {noteId})
             Message.success(res.msg)
         })

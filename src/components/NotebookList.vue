@@ -27,9 +27,6 @@
 </template>
 
 <script>
-    import Auth from "../apis/auth";
-    // import NotebooksList from "../apis/notebooks";
-    // import {friendlyDate} from '../helper/util.js'
     import {mapGetters, mapActions} from 'vuex'
     // 笔记本列表
 
@@ -39,16 +36,8 @@
             return {}
         },
         created() {
-            Auth.getInfo().then(res => {
-                if (!res.isLogin) {
-                    this.$router.push({path: '/login'})
-                }
-            })
-
-            // NotebooksList.getAll().then(res => {
-            //     this.notebooks = res.data
-            // })
-            this.$store.dispatch('getNotebooks')
+            this.checkLogin({path: '/login'})
+            this.getNotebooks()
         },
         computed: {
             ...mapGetters(['notebooks'])
@@ -60,7 +49,8 @@
                 'getNotebooks',
                 'addNotebook',
                 'updateNotebook',
-                'deleteNotebook'
+                'deleteNotebook',
+                'checkLogin'
             ]),
 
             onCreate() {
@@ -71,15 +61,8 @@
                     inputErrorMessage: '标题不能为空，且长度不能超过30字符'
                 }).then(({value}) => {
                     this.addNotebook({title: value})
-                    // return NotebooksList.addNotebook({title: value})
 
                 })
-                //     .then(res => {
-                //     res.data.friendDateCreatedAt = friendlyDate(res.data.createdAt)
-                //     this.notebooks.unshift(res.data)
-                //
-                //     this.$message.success(res.msg)
-                // })
             },
 
 
@@ -92,13 +75,7 @@
                     inputValue: notebook.title,
                 }).then(({value}) => {
                     this.updateNotebook({notebookId: notebook.id, title: value})
-                    // return NotebooksList.updateNotebooks(notebook.id, {title})
                 })
-                //     .then(res => {
-                //     notebook.title = title
-                //     this.$message.success(res.msg)
-                // })
-
             },
             onDelete(notebook) {
                 this.$confirm('确认删除该笔记本, 是否继续?', '删除该笔记本', {
@@ -107,13 +84,8 @@
                     type: 'warning'
                 }).then(() => {
                     this.deleteNotebook({notebookId: notebook.id})
-                    // return NotebooksList.deleteNotebook(notebook.id)
                 })
-                //     .then(res => {
-                //     this.notebooks.splice(this.notebooks.indexOf(notebook), 1)
-                //
-                //     this.$message.success(res.msg)
-                // })
+
             }
         }
     }

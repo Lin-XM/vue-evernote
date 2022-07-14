@@ -3,10 +3,10 @@ import {friendlyDate} from '../helper/util.js'
 
 
 const URL = {
-    GET:'/notebooks',
-    ADD:'/notebooks',
-    UPDATE:'/notebooks/:id',
-    DELETE:'/notebooks/:id'
+    GET: '/notebooks',
+    ADD: '/notebooks',
+    UPDATE: '/notebooks/:id',
+    DELETE: '/notebooks/:id'
 }
 
 export default  {

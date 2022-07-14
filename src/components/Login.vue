@@ -41,7 +41,7 @@
 </template>
 
 <script>
-    import Auth from '../apis/auth'
+    import {mapActions} from 'vuex'
 
     export default {
         data() {
@@ -62,8 +62,13 @@
                 }
             }
         },
-        methods: {
 
+        methods: {
+            ...mapActions({
+                loginUser: 'login',
+                registerUser: 'register',
+                checkLogin:'checkLogin'
+            }),
             showLogin() {
                 this.isShowLogin = true
                 this.isShowRegister = false
@@ -86,22 +91,17 @@
                 }
 
 
-                Auth.register({
+                this.registerUser({
                     username: this.register.username,
                     password: this.register.password
-                }).then(data => {                   // 注册成功 ==>跳转页面
+                }).then(() => {                   // 注册成功 ==>跳转页面
                     this.register.isError = false
                     this.register.notice = ''
-                    console.log(data);
                     this.$router.push({path: '/notebooks'})
 
-                    this.$bus.$emit('userInfo',{ username:this.login.username})
-
-                    console.log('注册成功');
                 }).catch(data => {                    // 注册失败
                     this.register.isError = true
                     this.register.notice = data.msg
-                    window.alert('用户已存在！！')
                 })
 
 
@@ -119,20 +119,14 @@
                 }
 
 
-                Auth.login({
+                this.loginUser({
                     username: this.login.username,
                     password: this.login.password
-                }).then(data => {               // 登录成功 ==> 跳转页面
+                }).then(() => {               // 登录成功 ==> 跳转页面
                     this.login.isError = false
                     this.login.notice = ''
-                    console.log(data)
-                    console.log('start redirect...');
                     this.$router.push({path: '/notebooks'})
-
-                    this.$bus.$emit('userInfo',{ username:this.login.username})
-                }).catch(data => {              // 登录失败
-                    window.alert('输入的用户名或密码错误！')
-                    console.log(data);
+                }).catch((data) => {              // 登录失败
                     this.login.isError = true
                     this.login.notice = data.msg
                 })

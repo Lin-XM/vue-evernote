@@ -30,42 +30,28 @@
 </template>
 
 <script>
-    // import Notebooks from "../apis/notebooks";
-    // import Notes from '../apis/notes'
-    import {mapActions,mapGetters} from "vuex"
-
-    // 不能查看笔记
-
+    import {mapActions,mapGetters,mapMutations} from "vuex"
 
     export default {
         name: 'NoteSideBar',
-        props: ['curNote'],
         data() {
             return {
             }
         },
         created() {
+            // TODO
+            // 这个笔记本数量比较多，需要进行处理
+            // 将悬浮展示列表，改为点击展示笔记本列表
             this.getNotebooks().then(()=>{
-                this.$store.commit('setCurBook',{curBookId:this.$route.query.notebookId})
-                this.getNotes({notebookId:this.curBook.id})
+
+                this.setCurBook({curBookId:this.$route.query.notebookId})
+                return this.getNotes({notebookId:this.curBook.id})
+            }).then(()=>{
+                this.setCurNote({ curNoteId:this.$route.query.noteId})
             })
 
-            // Notebooks.getAll().then(res => {
-            //     // TODO
-            //     // 这个笔记本数量比较多，需要进行处理
-            //     // 将悬浮展示列表，改为点击展示笔记本列表
-            //
-            //     this.notebooks = res.data
-            //     this.curBook = this.notebooks.find(notebook => notebook.id === this.$route.query.notebookId)
-            //         || this.notebooks[0] || {}
-            //     return Notes.getAllNotes({notebookId: this.curBook.id})
-            // }).then(res => {
-            //     this.notes = res.data
-            //
-            //     this.$bus.$emit('update:updateNotes', this.notes)
-            //     // 传递 notes 数据给 NoteDetail
-            //     this.$emit('update:updateNotes', this.notes)
-            // })
+
+
         },
         computed:{
             ...mapGetters([
@@ -75,9 +61,10 @@
             ])
         },
         methods: {
-            // ...mapMutations([
-            //     'setCurBook',
-            // ]),
+            ...mapMutations([
+                'setCurBook',
+                'setCurNote'
+            ]),
             ...mapActions([
                 'getNotebooks',
                 'getNotes',
@@ -90,19 +77,10 @@
                 this.$store.commit('setCurBook',{curBookId:notebookId})
                 this.getNotes({notebookId})
 
-                // this.curBook = this.notebooks.find(notebook => notebook.id === notebookId)
-                // Notes.getAllNotes({notebookId})
-                //     .then(res => {
-                //         this.notes = res.data
-                //         this.$emit('update:updateNotes', this.notes)
-                //         this.$bus.$emit('update:updateNotes', this.notes)
-                //     })
+
             },
             onAddNote() {
                 this.addNote({notebookId: this.curBook.id})
-                    // .then(res => {
-                    //     this.notes.unshift(res.data)
-                    // })
             },
 
 
@@ -126,12 +104,12 @@
             color: #666;
             font-size: 12px;
             padding: 2px 4px;
-            box-shadow: 0 0 2px 0 #ccc;
+            box-shadow: 0px 0px 2px 0px #ccc;
             border: none;
             z-index: 1;
         }
 
-        .notebook-title {
+        .notebook-title{
             font-size: 18px;
             font-weight: normal;
             color: #333;
@@ -142,13 +120,10 @@
             background-color: #f7f7f7;
             display: block;
         }
-
-        .el-dropdown-link {
+        .el-dropdown-link{
             cursor: pointer;
-            overflow: hidden;
         }
-
-        .el-dropdown-menu-item {
+        .el-dropdown-menu__item{
             width: 200px;
         }
 
@@ -167,7 +142,7 @@
                 }
             }
 
-            .iconfont {
+            .iconfont{
                 font-size: 10px;
             }
         }
@@ -178,27 +153,17 @@
                 &:nth-child(odd) {
                     background-color: #f2f2f2;
                 }
-                .active{
-                    background-color: skyblue;
-                }
+
                 a {
                     display: flex;
                     padding: 3px 0;
                     font-size: 12px;
                     border: 2px solid transparent;
-                    /*min-height: 26px;*/
-
                 }
 
-                a.router-link-exact-active {
+                .router-link-exact-active {
                     border: 2px solid #81c0f3;
                     border-radius: 3px;
-                    background-color: orange;
-                }
-                .router-link-active {
-                    border: 2px solid #81c0f3;
-                    border-radius: 3px;
-                    background-color: orange;
                 }
 
                 span {
@@ -208,6 +173,7 @@
             }
         }
     }
+
 
 
 </style>

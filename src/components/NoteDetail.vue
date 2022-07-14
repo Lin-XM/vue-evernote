@@ -11,21 +11,21 @@
                     <span>创建日期：{{curNote.createdAtFriendly}}</span>
                     <span>更新日期：{{curNote.updatedAtFriendly}}</span>
                     <span>{{statusText}}</span>
-                    <span @click="deleteNote"><img  src="../assets/delete.svg" alt=""></span>
+                    <span @click="onDeleteNote"><img src="../assets/delete.svg" alt=""></span>
                     <span @click="isShow=!isShow"><img src="../assets/fullScreen.svg" alt=""></span>
                 </div>
                 <div class="note-title">
                     <label>
-                        <input type="text" v-model="curNote.title" @input="updateNote"
+                        <input type="text" v-model="curNote.title" @input="onUpdateNote"
                                @keydown="statusText = '正在输入......' " placeholder="输入标题">
                     </label>
                 </div>
                 <div class="editor">
                     <label>
-                        <textarea v-show="!this.isShow" v-model="curNote.content" @input="updateNote"
+                        <textarea v-show="!this.isShow" v-model="curNote.content" @input="onUpdateNote"
                                   @keydown="statusText = '正在输入......'" placeholder="输入内容，支持 Markdown 语法"></textarea>
                     </label>
-                    <div class="preview markdown-body" v-html="previewContent"  v-show="this.isShow" >预览页面</div>
+                    <div class="preview markdown-body" v-html="previewContent" v-show="this.isShow">预览页面</div>
                 </div>
             </div>
         </div>
@@ -33,11 +33,10 @@
 </template>
 
 <script>
-    import Auth from "../apis/auth";
     import NoteSideBar from "./NoteSideBar";
     import _ from 'lodash'
-    import Notes from "../apis/notes";
     import MarkdownIt from 'markdown-it'
+    import {mapGetters, mapActions, mapMutations} from "vuex";
 
     let md = new MarkdownIt()
     export default {
@@ -45,51 +44,51 @@
         components: {NoteSideBar},
         data() {
             return {
-                curNote: {},
-                notes: [],
                 statusText: "笔记未更新",
-                isShow:false
+                isShow: false
             }
         },
         created() {
-            Auth.getInfo().then(res => {
-                if (!res.isLogin) {
-                    this.$router.push({path: '/login'})
-                }
-            })
-            this.$bus.$once('update:updateNotes', value => {
-                this.curNote = value.find(note => note.id === this.$route.query.noteId) || {}
-            })
+            this.checkLogin({path: '/login'})
         },
         beforeRouteUpdate(to) {
-            console.log(typeof to.query.noteId);
-            console.log(this.notes);
-            this.curNote = this.notes.find(note => note.id.toString() === to.query.noteId) || {}
+            this.setCurNote({curNoteId: to.query.noteId})
         },
         methods: {
-            updateNote: _.debounce(function () {
-                console.log(this.curNote);
-                Notes.updateNote({noteId: this.curNote.id},
-                    {title: this.curNote.title, content: this.curNote.content}).then(() => {
+            ...mapMutations([
+                'setCurNote'
+            ]),
+            ...mapActions([
+                'updateNote',
+                'deleteNote',
+                'checkLogin'
+            ]),
+            onUpdateNote: _.debounce(function () {
+                this.updateNote({
+                    noteId: this.curNote.id,
+                    title: this.curNote.title,
+                    content: this.curNote.content
+                }).then(() => {
                     this.statusText = '已更新'
-                }).catch(data => {
-                        this.statusText = '报错出错'
-                        console.log('error', data);
+                }).catch(() => {
+                        this.statusText = '保存出错'
                     }
                 )
             }, 3000),
-            deleteNote() {
-                Notes.deleteNote({ noteId: this.curNote.id })
-                    .then(data => {
-                        this.$message.success(data.msg)
-                        this.notes.splice(this.notes.indexOf(this.curNote), 1)
-                        this.$router.replace({ path: '/note' })
+            onDeleteNote() {
+                this.deleteNote({noteId: this.curNote.id})
+                    .then(() => {
+                        this.$router.replace({path: '/note'})
                     })
             },
 
         },
-        computed:{
-            previewContent(){
+        computed: {
+            ...mapGetters([
+                'notes',
+                'curNote'
+            ]),
+            previewContent() {
                 return md.render(this.curNote.content || '')
             }
         }
@@ -120,7 +119,7 @@
             color: #ccc;
             text-align: center;
             margin-top: 100px;
-            height:100%;
+            height: 100%;
         }
 
         .note-bar {
@@ -171,7 +170,8 @@
         .editor {
             height: ~"calc(100% - 70px)";
             position: relative;
-            & ::-webkit-scrollbar{
+
+            & ::-webkit-scrollbar {
                 display: none;
             }
         }
@@ -195,7 +195,8 @@
         code {
             color: #f66;
         }
-        .markdown-body{
+
+        .markdown-body {
             text-align: start;
         }
     }

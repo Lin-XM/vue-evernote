@@ -3,43 +3,37 @@
 </template>
 
 <script>
-    import Auth from '../apis/auth'
+    import {mapActions, mapGetters} from "vuex";
 
     export default {
         name: "Avatar",
-        data(){
-            return {
-                username:"未登录",
-            }
+        data() {
+            return {}
         },
-        created(){
-            this.$bus.$on('userInfo', user =>{
-                this.username = user.username
-            })
-            Auth.getInfo().then(res =>{
-                if(res.isLogin){
-                    this.username = res.data.username
-                }
+        created() {
+            // this.setUser({path:'/login'})
+        },
+
+        methods: {
+            ...mapActions({
+                'setUser':'checkLogin'
             })
         },
-        beforeDestroy() {
-            this.$bus.$off('userInfo')
-        },
-        computed:{
-            slug(){
-                return this.username.charAt(0)
-            }
+        computed: {
+            ...mapGetters([
+                'username',
+                'slug'
+            ]),
         }
     }
 </script>
 
 <style scoped>
-    span{
+    span {
         display: inline-block;
         width: 30px;
         height: 30px;
         text-align: center;
-        : 15px;
         line-height: 32px;
         border-radius: 50%;
         background-color: #f2b81c;
@@ -47,7 +41,7 @@
         text-shadow: 1px 0 1px #795c19;
         font-weight: bold;
         text-transform: uppercase;
-        font-size: 18px ;
+        font-size: 18px;
         margin-bottom: 15px;
     }
 </style>

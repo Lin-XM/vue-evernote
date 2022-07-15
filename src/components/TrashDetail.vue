@@ -38,61 +38,53 @@
 </template>
 
 <script>
-    import Auth from "../apis/auth";
-    import {mapActions} from 'vuex'
+    import {mapActions, mapMutations, mapGetters} from 'vuex'
     import MarkdownIt from "markdown-it";
 
     let md = new MarkdownIt()
-
 
     export default {
         name: "TrashDetail",
         data() {
             return {
-                curTrashNote: {
-                    id: 3,
-                    title: '我的笔记',
-                    content: '## hello',
-                    createdAtFriendly: '2小时前00',
-                    updatedAtFriendly: '刚刚'
-                },
                 belongTo: '我的笔记本',
-                trashNotes: [
-                    {
-                        id: 4,
-                        content: '## hello',
-                        createdAtFriendly: '2小时前00',
-                        updatedAtFriendly: '刚刚'
-                    },
-                    {
-                        id: 3,
-                        content: '## hello',
-                        createdAtFriendly: '2小时前00',
-                        updatedAtFriendly: '刚刚'
-                    },
-                ]
             }
         },
         created() {
-            Auth.getInfo().then(res => {
-                if (!res.isLogin) {
-                    this.$router.push({path: '/login'})
-                }
+            this.checkLogin({path: '/login'})
+
+            this.getAllTrashNotes().then(() => {
+                console.log('fuck');
+                console.log('ffff',this.$route.query.noteId);
+                this.setCurTrashNote({curTrashNote: this.$route.query.noteId})
             })
-            // this.checkLogin()
+
         },
         methods: {
             ...mapActions([
-                'checkLogin'
+                'checkLogin',
+                'getAllTrashNotes',
+                'deleteTrashNote',
+                'deleteTrashNote'
+            ]),
+            ...mapMutations([
+                'setCurTrashNote'
             ]),
             onDelete() {
-
+                this.removeTrashNote({noteId: this.curTashNote.id})
             },
             onRevert() {
-
+                this.revertTrashNote({noteId: this.curTashNote.id})
+            },
+            beforeRouteUpdate(to) {
+                this.setCurTrashNote({curTrashNoteId: to.query.noteId})
             }
         },
         computed: {
+            ...mapGetters([
+                'trashNotes',
+                'curTrashNote'
+            ]),
             compileMarkdown() {
                 return md.render(this.curTrashNote.content || '')
             }
@@ -125,7 +117,7 @@
         background-color: #eee;
 
 
-        .notebook-title{
+        .notebook-title {
             font-size: 18px;
             font-weight: normal;
             color: #333;
@@ -152,7 +144,7 @@
                 }
             }
 
-            .iconfont{
+            .iconfont {
                 font-size: 10px;
             }
         }
@@ -189,16 +181,17 @@
         flex-direction: column;
 
 
-
         .note-bar {
             padding: 4px 20px;
             border-bottom: 2px solid #999;
-            margin:  0 4px;
+            margin: 0 4px;
+
             &:after {
-                content:'';
+                content: '';
                 display: block;
                 clear: both;
             }
+
             span {
                 font-size: 12px;
                 color: #999;
@@ -208,15 +201,15 @@
 
         }
 
-        .note-title{
-            input,span {
+        .note-title {
+            input, span {
                 display: inline-block;
                 width: 100%;
                 border: none;
                 outline: none;
                 font-size: 18px;
                 padding: 10px 20px;
-                text-align: left    ;
+                text-align: left;
             }
         }
 
@@ -224,7 +217,8 @@
             height: ~"calc(100% - 70px)";
             position: relative;
         }
-        .markdown-body{
+
+        .markdown-body {
             padding: 10px 20px;
             text-align: left;
         }

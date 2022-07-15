@@ -20,7 +20,7 @@
         </div>
         <ul class="notes">
             <li v-for="note in notes" :key="note.id">
-                <router-link  :to="`/note?noteId=${note.id}&notebookId=${curBook.id}`">
+                <router-link :to="`/note?noteId=${note.id}&notebookId=${curBook.id}`">
                     <span class="date">{{note.updatedAtFriendly}}</span>
                     <span class="title">{{note.title}}</span>
                 </router-link>
@@ -30,30 +30,28 @@
 </template>
 
 <script>
-    import {mapActions,mapGetters,mapMutations} from "vuex"
+    import {mapActions, mapGetters, mapMutations} from "vuex"
 
     export default {
         name: 'NoteSideBar',
         data() {
-            return {
-            }
+            return {}
         },
         created() {
             // TODO
             // 这个笔记本数量比较多，需要进行处理
             // 将悬浮展示列表，改为点击展示笔记本列表
-            this.getNotebooks().then(()=>{
+            this.getNotebooks().then(() => {
 
-                this.setCurBook({curBookId:this.$route.query.notebookId})
-                return this.getNotes({notebookId:this.curBook.id})
-            }).then(()=>{
-                this.setCurNote({ curNoteId:this.$route.query.noteId})
+                this.setCurBook('setCurBook', {curBookId: this.$route.query.notebookId})
+                return this.getNotes({notebookId: this.curBook.id})
+            }).then(() => {
+                this.setCurNote('setCurBook', {curNoteId: this.$route.query.noteId})
             })
 
 
-
         },
-        computed:{
+        computed: {
             ...mapGetters([
                 'notebooks',
                 'notes',
@@ -74,10 +72,8 @@
                 if (notebookId === 'trash') {
                     return this.$router.push({path: '/trash'})
                 }
-                this.$store.commit('setCurBook',{curBookId:notebookId})
+                this.$store.commit('setCurBook', {curBookId: notebookId})
                 this.getNotes({notebookId})
-
-
             },
             onAddNote() {
                 this.addNote({notebookId: this.curBook.id})
@@ -109,7 +105,7 @@
             z-index: 1;
         }
 
-        .notebook-title{
+        .notebook-title {
             font-size: 18px;
             font-weight: normal;
             color: #333;
@@ -120,10 +116,12 @@
             background-color: #f7f7f7;
             display: block;
         }
-        .el-dropdown-link{
+
+        .el-dropdown-link {
             cursor: pointer;
         }
-        .el-dropdown-menu__item{
+
+        .el-dropdown-menu__item {
             width: 200px;
         }
 
@@ -142,7 +140,7 @@
                 }
             }
 
-            .iconfont{
+            .iconfont {
                 font-size: 10px;
             }
         }
@@ -173,7 +171,6 @@
             }
         }
     }
-
 
 
 </style>

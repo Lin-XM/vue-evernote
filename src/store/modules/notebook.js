@@ -11,9 +11,15 @@ const state = {
 const getters = {
     notebooks: state => state.notebooks || [],
     curBook: state => {
-        if (!Array.isArray(state.notebooks)) return {}
-        if (!state.curBookId) return state.notebooks[0] || {}
-        return state.notebooks.find(notebook => notebook.id.toString() === state.curBookId) || {}
+        if(!Array.isArray(state.notebooks)) return {}
+        if(!state.curBookId) return state.notebooks[0] || {}
+        // console.log('fuck');
+        // console.log('state.notebooks[0].id');
+        // console.log(typeof state.notebooks[0].id)
+        // console.log(typeof state.curBookId);
+        // console.log(state.curBookId);
+
+        return state.notebooks.find(notebook => notebook.id === state.curBookId)
     }
 }
 

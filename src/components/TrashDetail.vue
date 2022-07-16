@@ -46,26 +46,38 @@
     export default {
         name: "TrashDetail",
         data() {
-            return {
-                belongTo: '我的笔记本',
-            }
+            return {}
+        },
+        beforeRouteUpdate(to) {
+            this.setCurTrashNote({curTrashNoteId: to.query.noteId})
         },
         created() {
             this.checkLogin({path: '/login'})
-
+            this.getNotebooks()
             this.getAllTrashNotes().then(() => {
-                console.log('fuck');
-                console.log('ffff',this.$route.query.noteId);
+                // 路由的问题
+                console.log('ffff', this.$route.query.noteId);
                 this.setCurTrashNote({curTrashNote: this.$route.query.noteId})
             })
+        },
 
+        computed: {
+            ...mapGetters([
+                'trashNotes',
+                'curTrashNote',
+                'belongTo'
+            ]),
+            compileMarkdown() {
+                return md.render(this.curTrashNote.content || '')
+            }
         },
         methods: {
             ...mapActions([
                 'checkLogin',
                 'getAllTrashNotes',
-                'deleteTrashNote',
-                'deleteTrashNote'
+                'removeTrashNote',
+                'revertTrashNote',
+                'getNotebooks'
             ]),
             ...mapMutations([
                 'setCurTrashNote'
@@ -76,19 +88,8 @@
             onRevert() {
                 this.revertTrashNote({noteId: this.curTashNote.id})
             },
-            beforeRouteUpdate(to) {
-                this.setCurTrashNote({curTrashNoteId: to.query.noteId})
-            }
         },
-        computed: {
-            ...mapGetters([
-                'trashNotes',
-                'curTrashNote'
-            ]),
-            compileMarkdown() {
-                return md.render(this.curTrashNote.content || '')
-            }
-        }
+
     }
 </script>
 

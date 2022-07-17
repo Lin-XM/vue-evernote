@@ -57,7 +57,7 @@
             this.getAllTrashNotes().then(() => {
                 // 路由的问题
                 console.log('ffff', this.$route.query.noteId);
-                this.setCurTrashNote({curTrashNote: this.$route.query.noteId})
+                this.setCurTrashNote({ curTrashNoteId: this.$route.query.noteId })
             })
         },
 
@@ -117,7 +117,6 @@
         border-right: 1px solid #ccc;
         background-color: #eee;
 
-
         .notebook-title {
             font-size: 18px;
             font-weight: normal;
@@ -151,6 +150,8 @@
         }
 
         .trashNotes {
+                max-height: 92%;
+                overflow: auto;
             li {
                 &:nth-child(odd) {
                     background-color: #f2f2f2;
@@ -173,6 +174,17 @@
                     flex: 1;
                 }
             }
+        }
+        .trashNotes {
+            -ms-overflow-style:none;
+            overflow: -moz-scrollbars-none;
+            scrollbar-width: none;
+            overflow-y:scroll;
+            overflow-x:hidden;
+
+        }
+        .trashNotes ::-webkit-scrollbar{
+            display: none;
         }
     }
 

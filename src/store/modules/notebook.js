@@ -39,6 +39,9 @@ const mutations = {
     },
     setCurBook(state, payload) {
         state.curBookId = payload.curBookId
+        console.log('fuck',state.curBookId);
+        console.log('fuck',payload.curBookId);
+
     },
 
 }

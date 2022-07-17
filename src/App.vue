@@ -1,7 +1,7 @@
 <template>
     <div id="app">
-        <Sidebar/>
-        <router-view/>
+        <Sidebar class="sidebar"/>
+        <router-view class="view-body"/>
     </div>
 </template>
 
@@ -64,4 +64,5 @@
         display: flex;
         align-items: stretch;
     }
+
 </style>

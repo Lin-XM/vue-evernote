@@ -43,10 +43,10 @@
             // 将悬浮展示列表，改为点击展示笔记本列表
             this.getNotebooks().then(() => {
 
-                this.setCurBook('setCurBook', {curBookId: this.$route.query.notebookId})
+                this.setCurBook({curBookId: this.$route.query.notebookId})
                 return this.getNotes({notebookId: this.curBook.id})
             }).then(() => {
-                this.setCurNote('setCurBook', {curNoteId: this.$route.query.noteId})
+                this.setCurNote({curNoteId: this.$route.query.noteId})
             })
 
 
@@ -100,7 +100,7 @@
             color: #666;
             font-size: 12px;
             padding: 2px 4px;
-            box-shadow: 0px 0px 2px 0px #ccc;
+            box-shadow: 0 0 2px 0 #ccc;
             border: none;
             z-index: 1;
         }

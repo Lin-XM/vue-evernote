@@ -1,7 +1,8 @@
 <template>
     <div class="sidebar">
+        <avatar/>
+
         <div class="icons">
-            <avatar></avatar>
             <router-link to="/note" title="笔记">
                 <img alt="" src="../assets/notebook.svg" class="iconfont icon-note">
             </router-link>
@@ -27,10 +28,8 @@
         components: {Avatar},
         methods: {
             logout() {
-                console.log('logout')
-                Auth.logout().then(data => {
-                    this.$router.push({path: '/login'})
-                    console.log(data)
+                Auth.logout().then(() => {
+                    this.$router.push({path: 'login'})
                 })
             }
         }
@@ -40,10 +39,11 @@
 <style scoped>
     .sidebar {
         width: 56px;
-        height: 100vh;
+        /*max-height: 900px;*/
         text-align: center;
         background-color: #2c333c;
         position: relative;
+
     }
 
     .icons {
@@ -55,8 +55,7 @@
         padding: 6px 0;
         display: block;
     }
-
-    .icons > .router-link-active {
+    .router-link-active {
         background-color: #5e6266;
     }
 

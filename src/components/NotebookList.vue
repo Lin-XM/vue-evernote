@@ -98,7 +98,7 @@
             border-bottom: 2px solid #999;
             padding: 12px 0;
             margin: 0 4px;
-            min-width: 100%;
+            max-width: 100%;
             display: flex;
 
             > .btn {
@@ -149,21 +149,24 @@
             color: black;
             left: 0;
             text-align: left;
+            margin-bottom: 10px;
         }
 
         main .book-list {
-            margin-top: 10px;
+
             font-size: 14px;
+            max-height: 780px;
             color: #333;
             background-color: #fff;
             border-radius: 4px;
             font-weight: bold;
+            overflow: auto;
         }
-
         main .book-list span {
             font-size: 12px;
             font-weight: bold;
             color: #b3c0c8;
+
         }
 
         main .date,
@@ -198,5 +201,8 @@
             color: red;
         }
 
+    }
+    #notebook-list ::-webkit-scrollbar{
+        display: none;
     }
 </style>

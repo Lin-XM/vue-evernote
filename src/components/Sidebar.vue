@@ -39,6 +39,7 @@
 <style scoped>
     .sidebar {
         width: 56px;
+        min-height: 100%;
         /*max-height: 900px;*/
         text-align: center;
         background-color: #2c333c;

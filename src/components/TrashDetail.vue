@@ -114,7 +114,7 @@
     .note-sidebar {
         position: relative;
         width: 290px;
-        border-right: 1px solid #ccc;
+        /*border-right: 1px solid #ccc;*/
         background-color: #eee;
 
         .notebook-title {
@@ -175,17 +175,7 @@
                 }
             }
         }
-        .trashNotes {
-            -ms-overflow-style:none;
-            overflow: -moz-scrollbars-none;
-            scrollbar-width: none;
-            overflow-y:scroll;
-            overflow-x:hidden;
 
-        }
-        .trashNotes ::-webkit-scrollbar{
-            display: none;
-        }
     }
 
     .note-detail {
@@ -236,6 +226,20 @@
             text-align: left;
         }
 
+    }
+    .trashNotes .note-detail {
+        -ms-overflow-style:none;
+        overflow: -moz-scrollbars-none;
+        scrollbar-width: none;
+        overflow-y:scroll;
+        overflow-x:hidden;
+
+    }
+    .trashNotes ::-webkit-scrollbar{
+        display: none;
+    }
+    .note-detail ::-webkit-scrollbar{
+        display: none;
     }
 
 </style>

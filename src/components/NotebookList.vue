@@ -90,9 +90,11 @@
         }
     }
 </script>
+
 <style scoped lang="less">
     #notebook-list {
         flex: 1;
+
 
         header {
             border-bottom: 2px solid #999;
@@ -204,5 +206,12 @@
     }
     #notebook-list ::-webkit-scrollbar{
         display: none;
+    }
+    #notebook-list{
+        -ms-overflow-style:none;
+        overflow: -moz-scrollbars-none;
+        scrollbar-width: none;
+        overflow-y:hidden;
+        overflow-x:hidden;
     }
 </style>

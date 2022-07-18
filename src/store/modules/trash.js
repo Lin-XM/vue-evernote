@@ -25,7 +25,7 @@ const mutations = {
         state.trashNotes = payload.trashNotes
         console.log(payload.trashNotes === state.trashNotes);
     },
-    setCurTrashNote(state, payload) {
+    setCurTrashNote(state, payload={}) {
         state.curTrashNoteId = payload.curTrashNoteId
     },
     addTrashNote(state, payload) {

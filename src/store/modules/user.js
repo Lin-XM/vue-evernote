@@ -38,7 +38,14 @@ const actions = {
                 commit('setUser', {user: res.data})
             }
         })
-    }
+    },
+    logout({ commit }, payload = { path: '/login' }) {
+        return Auth.logout()
+            .then(() => {
+                commit('setUser', { user: null })
+                router.push(payload)
+            })
+    },
 }
 export default {
     state, getters, mutations, actions

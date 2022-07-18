@@ -14,23 +14,26 @@
             </router-link>
         </div>
         <div class="logout">
-            <img alt="" src="../assets/logout.svg" class="iconfont icon-logout" @click="logout">
+            <img alt="" src="../assets/logout.svg" class="iconfont icon-logout" @click="onLogout">
         </div>
     </div>
 </template>
 
 <script>
     import Avatar from "./Avatar";
-    import Auth from '../apis/auth.js'
+    import {mapActions} from 'vuex'
+    // import Auth from '../apis/auth.js'
+
 
     export default {
         name: "Sidebar",
         components: {Avatar},
         methods: {
-            logout() {
-                Auth.logout().then(() => {
-                    this.$router.push({path: 'login'})
-                })
+            ...mapActions([
+                'logout'
+            ]),
+            onLogout() {
+                this.logout({path: '/login'})
             }
         }
     }
@@ -56,6 +59,7 @@
         padding: 6px 0;
         display: block;
     }
+
     .router-link-active {
         background-color: #5e6266;
     }

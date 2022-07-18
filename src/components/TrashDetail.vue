@@ -57,7 +57,11 @@
             this.getAllTrashNotes().then(() => {
                 // 路由的问题
                 console.log('ffff', this.$route.query.noteId);
-                this.setCurTrashNote({ curTrashNoteId: this.$route.query.noteId })
+                this.setCurTrashNote({curTrashNoteId: this.$route.query.noteId})
+                this.$router.replace({
+                    path: '/trash',
+                    query: {noteId: this.curTrashNote.id}
+                })
             })
         },
 
@@ -83,10 +87,28 @@
                 'setCurTrashNote'
             ]),
             onDelete() {
-                this.removeTrashNote({noteId: this.curTashNote.id})
+                this.$confirm('删除笔记后，无法恢复, 是否继续?', '删除该笔记本', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    return this.removeTrashNote({noteId: this.curTashNote.id})
+                }).then(() => {
+                    this.setCurTrashNote()
+                    this.$router.replace({
+                        path: '/trash',
+                        query: {noteId: this.curTrashNote.id}
+                    })
+                })
             },
             onRevert() {
-                this.revertTrashNote({noteId: this.curTashNote.id})
+                this.revertTrashNote({noteId: this.curTashNote.id}).then(() => {
+                    this.setCurTrashNote()
+                    this.$router.replace({
+                        path: '/trash',
+                        query: {noteId: this.curTrashNote.id}
+                    })
+                })
             },
         },
 
@@ -150,8 +172,9 @@
         }
 
         .trashNotes {
-                max-height: 92%;
-                overflow: auto;
+            max-height: 92%;
+            overflow: auto;
+
             li {
                 &:nth-child(odd) {
                     background-color: #f2f2f2;
@@ -227,18 +250,21 @@
         }
 
     }
+
     .trashNotes .note-detail {
-        -ms-overflow-style:none;
+        -ms-overflow-style: none;
         overflow: -moz-scrollbars-none;
         scrollbar-width: none;
-        overflow-y:scroll;
-        overflow-x:hidden;
+        overflow-y: scroll;
+        overflow-x: hidden;
 
     }
-    .trashNotes ::-webkit-scrollbar{
+
+    .trashNotes ::-webkit-scrollbar {
         display: none;
     }
-    .note-detail ::-webkit-scrollbar{
+
+    .note-detail ::-webkit-scrollbar {
         display: none;
     }
 

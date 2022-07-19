@@ -1,32 +1,39 @@
 <template>
     <div id="note" class="detail">
 
-        <note-side-bar :curNote='curNote' @update:updateNotes="value => notes = value"/>
+        <note-side-bar @update:updateNotes="value => notes = value"/>
 
         <div class="note-detail">
             <div class="note-empty" v-show="!curNote.id">请选择你查看的笔记</div>
 
             <div v-show="curNote.id">
                 <div class="note-bar">
-                    <span>创建日期：{{curNote.createdAtFriendly}}</span>
-                    <span>更新日期：{{curNote.updatedAtFriendly}}</span>
+                    <span> 创建日期: {{curNote.createdAtFriendly}}</span>
+                    <span> 更新日期: {{curNote.updatedAtFriendly}}</span>
                     <span>{{statusText}}</span>
                     <span @click="onDeleteNote"><img src="../assets/delete.svg" alt=""></span>
-                    <span @click="isShow=!isShow"><img src="../assets/fullScreen.svg" alt=""></span>
+                    <span @click="isShow=!isShow">
+                        <img src="../assets/eyes.svg" alt="">
+                    </span>
                 </div>
+
                 <div class="note-title">
                     <label>
                         <input type="text" v-model="curNote.title" @input="onUpdateNote"
                                @keydown="statusText = '正在输入......' " placeholder="输入标题">
                     </label>
                 </div>
+
                 <div class="editor">
                     <label>
                         <textarea v-show="!this.isShow" v-model="curNote.content" @input="onUpdateNote"
-                                  @keydown="statusText = '正在输入......'" placeholder="输入内容，支持 Markdown 语法"></textarea>
+                                  @inputread="statusText = '正在输入......'" placeholder="输入内容，支持 Markdown 语法">
+
+                        </textarea>
                     </label>
                     <div class="preview markdown-body" v-html="previewContent" v-show="this.isShow">预览页面</div>
                 </div>
+
             </div>
         </div>
     </div>
@@ -87,7 +94,7 @@
         computed: {
             ...mapGetters([
                 'notes',
-                'curNote'
+                'curNote',
             ]),
             previewContent() {
                 return md.render(this.curNote.content || '')

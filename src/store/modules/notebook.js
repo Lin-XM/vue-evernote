@@ -20,9 +20,7 @@ const getters = {
 
         console.log('fuck3',state.curBookId);
         console.log('fuck4',state.notebooks);
-        const x=  state.notebooks.find(notebook => notebook.id.toString() === state.curBookId)
-        console.log('查找匹配的：',x);
-        return x
+        return state.notebooks.find(notebook => notebook.id === parseInt(state.curBookId))
     }
 }
 
@@ -51,6 +49,7 @@ const actions = {
     getNotebooks({commit,state}) {
         if(state.notebooks !== null ) return Promise.resolve()
         return Notebooks.getAll().then(res => {
+            console.log('fffff:',res);
             commit('setNotebooks', {notebooks: res.data})
         })
     },

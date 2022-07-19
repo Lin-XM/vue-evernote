@@ -11,25 +11,24 @@ export default function request(url, type = 'GET', data = {}) {
             url,
             method: type,
             validateStatus(status) {
-                return (status >= 200 && status < 300) || status === 400
+                return (status >=200 && status < 300) || status === 400
             }
         }
-        if (type.toLowerCase() === 'get') {
+        if(type.toLowerCase() === 'get') {
             option.params = data
-        } else {
+        }else {
             option.data = data
         }
         axios(option).then(res => {
-            if (res.status === 200) {
+            if(res.status === 200) {
                 resolve(res.data)
-            } else {
+            }else {
                 Message.error(res.data.msg)
                 reject(res.data)
             }
         }).catch(() => {
             Message.error('网络异常')
-
-            reject({msg: '网络异常！'})
+            reject({ msg: '网络异常' })
         })
     })
 }

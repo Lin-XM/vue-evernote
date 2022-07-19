@@ -13,16 +13,13 @@ const getters = {
     curBook: state => {
         if(!Array.isArray(state.notebooks)) return {}
         if(!state.curBookId) return state.notebooks[0] || {}
-        // console.log('fuck');
         // console.log('state.notebooks[0].id');
-        console.log(typeof state.notebooks[0].id)
-        console.log(typeof state.curBookId);
-
-        console.log('fuck3',state.curBookId);
-        console.log('fuck4',state.notebooks);
-        const x=  state.notebooks.find(notebook => notebook.id.toString() === state.curBookId)
-        console.log('查找匹配的：',x);
-        return x
+        // console.log(typeof state.notebooks[0].id)
+        // console.log(typeof state.curBookId);
+        //
+        // console.log('fuck3',state.curBookId);
+        // console.log('fuck4',state.notebooks);
+        return state.notebooks.find(notebook => notebook.id === parseInt(state.curBookId))
     }
 }
 
@@ -42,8 +39,8 @@ const mutations = {
     },
     setCurBook(state, payload) {
         state.curBookId = payload.curBookId
-        console.log('fuck1',state.curBookId);
-        console.log('fuck2',payload.curBookId);
+        // console.log('fuck1',state.curBookId);
+        // console.log('fuck2',payload.curBookId);
     },
 
 }

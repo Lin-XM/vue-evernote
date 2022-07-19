@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import Trash from "../../apis/trash";
-import {Message} from "element-ui";
+import { Message } from "element-ui";
 
 Vue.use(Vuex)
 const state = {
@@ -9,23 +9,33 @@ const state = {
     curTrashNoteId: null,
 }
 const getters = {
-    trashNotes: state => state.trashNotes || {},
+    trashNotes: state => state.trashNotes || [],
     curTrashNote: (state, getter) => {
         if (!state.curTrashNoteId) return getter.trashNotes[0] || {}
-        return state.trashNotes.find(note => note.id === state.curTrashNoteId) || {}
+        console.log(typeof state.trashNotes);
+
+        console.log('fuckxxx', state.trashNotes);
+        console.log(typeof state.curTrashNoteId);
+
+        console.log('fuckyyyy', state.curTrashNoteId);
+
+        const x = state.trashNotes.find(note => note.id === parseInt(state.curTrashNoteId)) || {}
+        console.log(x);
+        return x
     },
-    belongTo: (state, getter, rootStates, rootGetters) => {
-        let notebook = rootGetters.notebooks.find(notebook => notebook.id === getters.curTrashNote.notebookId) || {}
-        return notebook.title || ""
+
+    belongTo: (state, getters, rootState, rootGetters) => {
+        let notebook = rootGetters.notebooks.find(notebook => notebook.id == getters.curTrashNote.notebookId) || {}
+        return notebook.title || ''
     }
 }
 
 const mutations = {
     setTrashNotes(state, payload) {
         state.trashNotes = payload.trashNotes
-        console.log(payload.trashNotes === state.trashNotes);
+        console.log('fuck2', state.trashNotes);
     },
-    setCurTrashNote(state, payload={}) {
+    setCurTrashNote(state, payload = {}) {
         state.curTrashNoteId = payload.curTrashNoteId
     },
     addTrashNote(state, payload) {
@@ -38,23 +48,23 @@ const mutations = {
 }
 const actions = {
     // 获得删除的笔记
-    getAllTrashNotes({commit}) {
+    getAllTrashNotes({ commit }) {
         return Trash.getAllTrashNotes().then(res => {
-            commit('setTrashNotes', {trashNotes: res.data})
-            console.log('fuck');
+            console.log('fuck1', res);
+            commit('setTrashNotes', { trashNotes: res.data })
         })
     },
     // 彻底删除
-    removeTrashNote({commit}, {noteId}) {
-        return Trash.deleteTrashNote({noteId}).then((res) => {
-            commit("deleteTrashNote", {noteId})
+    removeTrashNote({ commit }, { noteId }) {
+        return Trash.deleteTrashNote({ noteId }).then((res) => {
+            commit("deleteTrashNote", { noteId })
             Message.success(res.msg)
         })
     },
     // 恢复
-    revertTrashNote({commit}, {noteId}) {
-        return Trash.revertTrashNote({noteId}).then((res) => {
-            commit("deleteTrashNote", {noteId})
+    revertTrashNote({ commit }, { noteId }) {
+        return Trash.revertTrashNote({ noteId }).then((res) => {
+            commit("deleteTrashNote", { noteId })
             Message.success(res.msg)
         })
     }

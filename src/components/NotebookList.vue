@@ -6,23 +6,26 @@
                 <span class="iconText">新建笔记本</span>
             </a>
         </header>
+
         <main>
             <div class="layout">
                 <h3>笔记本列表, 共{{notebooks.length}}</h3>
                 <div class="book-list">
-                    <router-link :to="`/note?notebookId=${notebook.id}`" v-for="notebook in notebooks"
+                    <router-link :to="`/note?notebookId=${notebook.id}`"
+                                 v-for="notebook in notebooks"
                                  :key="notebook.id" class="notebook">
                         <div>
                             <span class="iconfont icon-notebook">{{notebook.title}}</span>
                             <span>{{notebook.noteCounts}}</span>
                             <span class="action" @click.stop.prevent="onEdit(notebook)">编辑</span>
                             <span class="action" @click.stop.prevent="onDelete(notebook)">删除</span>
-                            <span class="date">{{notebook.friendDateCreatedAt}}</span>
+                            <span class="date">{{notebook.createdAtFriendly}}</span>
                         </div>
                     </router-link>
                 </div>
             </div>
         </main>
+
     </div>
 </template>
 
@@ -32,9 +35,6 @@
 
     export default {
         name: 'NotebookList',
-        data() {
-            return {}
-        },
         created() {
             this.checkLogin({path: '/login'})
             this.getNotebooks()

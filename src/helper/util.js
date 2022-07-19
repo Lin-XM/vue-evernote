@@ -1,23 +1,22 @@
-export function friendlyDate(dateStr) {
-    let dataObj = typeof dateStr === 'object' ? dateStr : new Date(dateStr)
-    let time = dataObj.getTime()
+export function friendlyDate(dataStr) {
+    let dateObj = typeof dataStr === 'object' ? dataStr : new Date(dataStr)
+    let time = dateObj.getTime()
     let now = Date.now()
-    let spaceTime = now - time
-    let str
+    let space = now - time
+    let str = ''
 
     switch (true) {
-        case spaceTime < 1000 * 60:
+        case space < 60000:
             str = '刚刚'
             break
-        case spaceTime < 1000 * 60 * 60 :
-            str = Math.floor(spaceTime / (1000 * 60)) + '分钟前'
+        case space < 1000 * 3600:
+            str = Math.floor(space / 60000) + '分钟前'
             break
-        case spaceTime < 1000 * 60 * 60 * 24:
-            str = Math.floor(spaceTime / (1000 * 60 * 60)) + '小时前'
+        case space < 1000 * 3600 * 24:
+            str = Math.floor(space / (1000 * 3600)) + '小时前'
             break
         default:
-            str = Math.floor(spaceTime / (1000 * 60 * 60 * 24)) + '天前'
-
+            str = Math.floor(space / (1000 * 3600 * 24)) + '天前'
     }
     return str
 }

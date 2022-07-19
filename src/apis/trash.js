@@ -11,24 +11,26 @@ const URL = {
 export default {
     getAllTrashNotes() {
         return new Promise((resolve, reject) => {
-            request(URL.GET).then(res => {
-                res.data = res.data.sort((note1, note2) => note1.createdAt < note2.createdAt ? 1 : -1)
-                res.data.forEach(note => {
-                    note.createdAtFriendly = friendlyDate(note.createdAt)
-                    note.updatedAtFriendly = friendlyDate(note.updatedAt)
-                })
-                resolve(res)
-            }).catch(err => {
+            request(URL.GET)
+                .then(res => {
+                    res.data = res.data.sort((note1, note2) =>
+                        note1.createdAt < note2.createdAt ? 1 : -1)
+                    res.data.forEach(note => {
+                        note.createdAtFriendly = friendlyDate(note.createdAt)
+                        note.updatedAtFriendly = friendlyDate(note.updatedAt)
+                    })
+                    resolve(res)
+                }).catch(err => {
                 reject(err)
             })
         })
     },
 
     deleteTrashNote({noteId}) {
-        return request(URL.DELETE.replace(':noteId', noteId), "DELETE")
+        return request(URL.DELETE.replace(':noteId', noteId), 'DELETE')
     },
     revertTrashNote({noteId}) {
-        return request(URL.REVERT.replace(':noteId', noteId), "PATCH")
+        return request(URL.REVERT.replace(':noteId', noteId), 'PATCH')
     },
 
 }

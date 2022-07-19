@@ -7,16 +7,13 @@
 
     export default {
         name: "Avatar",
-        data() {
-            return {}
-        },
         created() {
             // this.setUser({path:'/login'})
         },
 
         methods: {
             ...mapActions({
-                'setUser':'checkLogin'
+                'setUser': 'checkLogin'
             })
         },
         computed: {

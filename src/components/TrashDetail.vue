@@ -89,7 +89,7 @@ export default {
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-                return this.removeTrashNote({ noteId: this.curTashNote.id })
+                return this.removeTrashNote({ noteId: this.curTrashNote.id })
             }).then(() => {
                 this.setCurTrashNote()
                 this.$router.replace({
@@ -99,7 +99,7 @@ export default {
             })
         },
         onRevert() {
-            this.revertTrashNote({ noteId: this.curTashNote.id }).then(() => {
+            this.revertTrashNote({ noteId: this.curTrashNote.id }).then(() => {
                 this.setCurTrashNote()
                 this.$router.replace({
                     path: '/trash',

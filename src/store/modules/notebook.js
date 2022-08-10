@@ -13,13 +13,7 @@ const getters = {
     curBook: state => {
         if(!Array.isArray(state.notebooks)) return {}
         if(!state.curBookId) return state.notebooks[0] || {}
-        // console.log('fuck');
-        // console.log('state.notebooks[0].id');
-        console.log(typeof state.notebooks[0].id)
-        console.log(typeof state.curBookId);
 
-        console.log('fuck3',state.curBookId);
-        console.log('fuck4',state.notebooks);
         return state.notebooks.find(notebook => notebook.id === parseInt(state.curBookId))
     }
 }
@@ -40,8 +34,7 @@ const mutations = {
     },
     setCurBook(state, payload) {
         state.curBookId = payload.curBookId
-        console.log('fuck1',state.curBookId);
-        console.log('fuck2',payload.curBookId);
+
     },
 
 }
@@ -49,7 +42,6 @@ const actions = {
     getNotebooks({commit,state}) {
         if(state.notebooks !== null ) return Promise.resolve()
         return Notebooks.getAll().then(res => {
-            console.log('fffff:',res);
             commit('setNotebooks', {notebooks: res.data})
         })
     },

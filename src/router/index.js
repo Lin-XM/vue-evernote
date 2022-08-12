@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import VueRouter from "vue-router";
-import HelloWorld from "../components/HelloWorld";
 import Login from '../components/Login.vue'
 import NotebookList from "../components/NotebookList";
 import NoteDetail from "../components/NoteDetail";
@@ -11,30 +10,29 @@ const router = new VueRouter({
     routes: [
         {
             path: '/',
-            name: 'HelloWorld',
-            component: HelloWorld
+            redirect: '/login'
         },
         {
-            path:'/login',
-            name:'Login',
+            path: '/login',
+            name: 'Login',
             component: Login
         },
         {
-            path:'/notebooks',
-            name:'NotebookList',
+            path: '/notebooks',
+            name: 'NotebookList',
             component: NotebookList
         },
         {
-            path:'/note',
-            name:'note',
+            path: '/note',
+            name: 'note',
             component: NoteDetail
         },
         {
-            path:'/trash',
-            name:'trash',
+            path: '/trash',
+            name: 'trash',
             component: TrashDetail
         },
 
     ]
 })
-export default  router
+export default router
